@@ -46,4 +46,38 @@ User.findById = (userId, result) => {
     })
 }
 
+User.updateById = (userId, user, result) => {
+    const {fullname, username, email, password} = user
+    const sql = 'UPDATE `users` SET `fullname` = ?, `username` = ?, `email` = ?, `password` = ? WHERE `id` = ?'
+    conn.query(sql, [fullname, username, email, password, userId], (err, res) => {
+        if(err) {
+            console.log(`error: ${err}`)
+            result(null, err)
+            return
+        }
+        if(res.affectedRows == 0) {
+            result({kind: 'not_found'}, null)
+            return
+        }
+        console.log('Updated User: ', {id: userId, ...user })
+        result(null, {id: userId, ...user})
+    })
+}
+
+User.remove = (userId, result) => {
+    conn.query('DELETE FROM `users` WHERE `id` = ?', userId, (err, res) => {
+        if(err) {
+            console.log(`error: ${err}`)
+            return(null, err)
+            return
+        }
+        if(res.affectedRows == 0) {
+            result({kind: 'not_found'}, null)
+            return
+        }
+        console.log(`Deleted User with id ${userId}`)
+        result(null, res)
+    })
+}
+
 module.exports = User
