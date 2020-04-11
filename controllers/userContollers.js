@@ -17,5 +17,16 @@ module.exports = {
                 res.send(data)
             }
         })
+    },
+    findAll: (req, res) => {
+        User.getAll((err, data) => {
+            if(err) {
+                res.status(500).send({
+                    message: 'Some error occured while retrieving users'
+                })
+            } else {
+                res.send(data)
+            }
+        })
     }
 }

@@ -18,4 +18,15 @@ User.create = (user, result) => {
     })
 }
 
+User.getAll = result => {
+    conn.query('SELECT `fullname`, `username`, `email` FROM `users`', (err, res) => {
+        if (err) {
+            console.log(`error: ${err}`)
+            result(null, err);
+        }
+        console.log('Users: ', res)
+        result(null, res);
+    });
+};
+
 module.exports = User
