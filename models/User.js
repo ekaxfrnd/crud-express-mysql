@@ -22,11 +22,28 @@ User.getAll = result => {
     conn.query('SELECT `fullname`, `username`, `email` FROM `users`', (err, res) => {
         if (err) {
             console.log(`error: ${err}`)
-            result(null, err);
+            result(null, err)
+            return
         }
         console.log('Users: ', res)
         result(null, res);
     });
 };
+
+User.findById = (userId, result) => {
+    conn.query('SELECT `fullname`, `username`, `email` FROM `users` WHERE `id` = ?', userId, (err, res) => {
+        if(err) {
+            console.log(`error: ${err}`)
+            result(err, null)
+            return
+        }
+        if(res.length) {
+            console.log('Found User: ', res[0])
+            result(null, res[0])
+            return
+        }
+        result({kind: 'not_found'}, null)
+    })
+}
 
 module.exports = User
